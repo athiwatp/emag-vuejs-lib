@@ -1,19 +1,21 @@
 <template>
     <select :id="'autocomplete_' + id" class="form-control" :multiple="this.options.multiple ? this.options.multiple : false">
         <option value=''></option>
-        <option :value="item.value" v-for="item in options.items">
+        <option v-for="item in dataOptions.items" :value="item.value" selected>
             {{ item.name }}
         </option>
     </select>
 </template>
 <script>
   import TranslationMessages from './../translations/messages'
-
+  /* eslint-disable no-undef */
   export default {
     name: 'autocomplete',
     props: ['dataOptions'],
+    updated () {
+      $('#autocomplete_' + this.id).trigger('chosen:updated')
+    },
     data () {
-      /* eslint-disable no-undef */
       this.id = this._uid
       this.translations = TranslationMessages.translations[getDefaultLang(this)]
 
@@ -22,9 +24,9 @@
         dataType: 'json',
         keepTypingMsg: this.translations.chosenAjax.typing,
         lookingForMsg: this.translations.chosenAjax.looking,
-        placeholder_text_multiple: this.translations.chosen.multipleText,
-        placeholder_text_single: this.translations.chosen.singleText,
-        no_results_text: this.translations.chosen.noResult,
+        placeholder_text_multiple: this.translations.chosenAjax.multipleText,
+        placeholder_text_single: this.translations.chosenAjax.singleText,
+        no_results_text: this.translations.chosenAjax.noResult,
         id: this.id,
         filters: {},
         allow_single_deselect: true,
